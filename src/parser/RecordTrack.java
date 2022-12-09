@@ -39,11 +39,12 @@ public class RecordTrack {
 		this.token = token;
 	}
 
+	// Capitalize first letter of a String
 	public String capitalize(String input) {
 		if (input == null || input.equals("")) {
 			return "";
 		}
-		return input.substring(0, 1).toUpperCase() + input.substring(1);
+		return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
 	}
 
 	@Override

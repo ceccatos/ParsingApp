@@ -9,18 +9,41 @@ import java.util.ArrayList;
 public class RecordTrackLibrary {
 
 	private ArrayList<RecordTrack> recordTrackLibrary;
+	private final String DATABASE = "RecordTrackLibrary.db";
 
 	public RecordTrackLibrary() {
 		this.recordTrackLibrary = new ArrayList<>();
 		// retrieve existing library from database
-		this.initLibrary("RecordTrackLibrary.db");
+		this.initLibrary();
 	}
 
 	public boolean addRecordTrack(RecordTrack recordTrack, boolean writeToDb) {
 		if (!(recordTrackLibrary.contains(recordTrack))) {
 			recordTrackLibrary.add(recordTrack);
 			if (writeToDb) {
-				
+
+				Connection connection;
+				Statement statement;
+
+				try {
+					Class.forName("org.sqlite.JDBC");
+					connection = DriverManager.getConnection("jdbc:sqlite:" + DATABASE);
+					connection.setAutoCommit(false);
+
+					statement = connection.createStatement();
+					String query = "INSERT INTO record_track (owner, name, description, typology) " + "VALUES ('"
+							+ recordTrack.getOwner() + "', '" + recordTrack.getName() + "', '"
+							+ recordTrack.getDescription() + "', '" + recordTrack.getTypology() + "');";
+
+					statement.executeUpdate(query);
+					statement.close();
+					connection.commit();
+					connection.close();
+					return true;
+				} catch (Exception e) {
+					e.printStackTrace();
+					return false;
+				}
 			}
 			return true;
 		}
@@ -36,14 +59,14 @@ public class RecordTrackLibrary {
 		}
 	}
 
-	public boolean initLibrary(String database) {
+	public boolean initLibrary() {
 
 		Connection connection;
 		Statement statement;
-		
+
 		try {
 			Class.forName("org.sqlite.JDBC");
-			connection = DriverManager.getConnection("jdbc:sqlite:" + database);
+			connection = DriverManager.getConnection("jdbc:sqlite:" + DATABASE);
 			connection.setAutoCommit(false);
 
 			statement = connection.createStatement();
