@@ -17,6 +17,15 @@ public class RecordTrackLibrary {
 			throw new IllegalArgumentException("recordTrack already recorded");
 		}
 	}
+	
+	public void clearLibrary() {
+		recordTrackLibrary.clear();
+	}
+	
+	public int size() {
+		return this.recordTrackLibrary.size();
+	}
+	
 
 	public void printLibrary() {
 		if (this.recordTrackLibrary.isEmpty()) {

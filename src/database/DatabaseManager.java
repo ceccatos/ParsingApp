@@ -37,6 +37,12 @@ public class DatabaseManager {
 				+ ")");
 		statement.close();
 	}
+	
+	public void clearDB() throws SQLException {
+		Statement statement = this.connection.createStatement();
+		statement.executeUpdate("DELETE FROM record_track");
+		statement.close();
+	}
 
 	public void insertRecordTrack(RecordTrack recordTrack) throws SQLException {
 		PreparedStatement prepStatement = this.connection
