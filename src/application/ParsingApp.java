@@ -1,7 +1,9 @@
 package application;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
+import database.DatabaseManager;
 import parser.RecordTrack;
 import parser.RecordTrackLibrary;
 import parser.RecordTrackType;
@@ -10,8 +12,20 @@ public class ParsingApp {
 
 	public static void main(String[] args) {
 
+		DatabaseManager dbManager = new DatabaseManager("RecordTrackLibrary.db");
 		RecordTrackLibrary recordTrackLibrary = new RecordTrackLibrary();
 		Scanner keyboard = new Scanner(System.in);
+
+		try {
+			dbManager.open();
+		} catch (ClassNotFoundException | SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			recordTrackLibrary = dbManager.getExistingLibrary();
+		} catch (SQLException e2) {
+			e2.printStackTrace();
+		}
 
 		while (true) {
 			System.out.println("Choices:\n1 - New RecordTrack\n2 - List RecordTrack\n3 - Quit");
@@ -30,20 +44,14 @@ public class ParsingApp {
 				System.out.println("Description:");
 				String description = keyboard.nextLine();
 				System.out.println("Type (POSITION, SEPARATOR):");
-				String typeInput = keyboard.nextLine();
-				RecordTrackType type = RecordTrackType.POSITION;
-				if (typeInput.equalsIgnoreCase("POSITION")) {
-					type = RecordTrackType.POSITION;
-				} else if (typeInput.equalsIgnoreCase("SEPARATOR")) {
-					type = RecordTrackType.SEPARATOR;
+				String type = keyboard.nextLine().toUpperCase();
+				RecordTrack recordTrack = new RecordTrack(owner, name, description, RecordTrackType.valueOf(type));
+				recordTrackLibrary.addRecordTrack(recordTrack);
+				try {
+					dbManager.insertRecordTrack(recordTrack);
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
-				RecordTrack recordTrack = new RecordTrack(owner, name, description, type);
-				if (recordTrackLibrary.addRecordTrack(recordTrack, true)) {
-					System.out.println("Record Track added to Library");
-				} else {
-					System.out.println("Record Track not added to Library");
-				}
-
 			}
 			if (userInput.equals("2")) {
 				recordTrackLibrary.printLibrary();
@@ -51,6 +59,11 @@ public class ParsingApp {
 
 		}
 		keyboard.close();
+		try {
+			dbManager.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 	}
 

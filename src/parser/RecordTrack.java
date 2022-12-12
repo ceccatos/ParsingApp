@@ -2,17 +2,17 @@ package parser;
 
 public class RecordTrack {
 
-	private int token; 
+	private int token;
 	private String owner;
 	private String name;
 	private String description;
-	private RecordTrackType typology;
+	private RecordTrackType type;
 
-	public RecordTrack(String owner, String name, String description, RecordTrackType typology) {
+	public RecordTrack(String owner, String name, String description, RecordTrackType type) {
 		this.owner = capitalize(owner);
 		this.name = capitalize(name);
 		this.description = capitalize(description);
-		this.typology = typology;
+		this.type = type;
 	}
 
 	public String getDescription() {
@@ -27,14 +27,14 @@ public class RecordTrack {
 		return this.owner;
 	}
 
-	public RecordTrackType getTypology() {
-		return this.typology;
+	public RecordTrackType getType() {
+		return this.type;
 	}
-	
+
 	public int getToken() {
 		return this.token;
 	}
-	
+
 	public void setToken(int token) {
 		this.token = token;
 	}
@@ -56,7 +56,7 @@ public class RecordTrack {
 			return false;
 		}
 		RecordTrack compared = (RecordTrack) obj;
-		if (this.name.equals(compared.name) && this.owner.equals(compared.owner) && this.typology == compared.typology) {
+		if (this.name.equals(compared.name) && this.owner.equals(compared.owner) && this.type == compared.type) {
 			return true;
 		}
 		return false;
@@ -64,10 +64,8 @@ public class RecordTrack {
 
 	@Override
 	public String toString() {
-		return "RecordTrack [owner = " + owner + ", name = " + name + ", desc = " + description + ", type = "
-				+ typology + "]";
+		return "RecordTrack [owner = " + owner + ", name = " + name + ", desc = " + description + ", type = " + type
+				+ "]";
 	}
-	
-	
 
 }
